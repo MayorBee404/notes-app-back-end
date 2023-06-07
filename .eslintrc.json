@@ -13,9 +13,5 @@
         "no-console": "off",
         "no-underscore-dangle": "off",
         "no-unused-vars": "off"
-    },
-    "editor.codeActionsOnSave": {
-        "source.fixAll": true
-    },
-    "eslint.validate": ["javascript"]
+    }
 }
