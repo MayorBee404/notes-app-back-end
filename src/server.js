@@ -39,6 +39,28 @@ const init = async () => {
 
   await server.register([
     {
+      plugin: Jwt,
+    },
+  ]);
+
+  server.auth.strategy('notesapp_jwt', 'jwt', {
+    keys: process.env.ACCESS_TOKEN_KEY,
+    verify: {
+      aud: false,
+      iss: false,
+      sub: false,
+      maxAgeSec: process.env.ACCESS_TOKEN_AGE,
+    },
+    validate: (artifacts) => ({
+      isValid: true,
+      credentials: {
+        id: artifacts.decoded.payload.id,
+      },
+    }),
+  });
+
+  await server.register([
+    {
       plugin: notes,
       options: {
         service: notesService,
@@ -81,6 +103,7 @@ const init = async () => {
         return h.continue;
       }
       // penanganan server error sesuai kebutuhan
+      console.log(response);
       const newResponse = h.response({
         status: 'error',
         message: 'terjadi kegagalan pada server kami',
