@@ -1,9 +1,10 @@
 const autoBind = require('auto-bind');
 
 class CollaborationsHandler {
-  constructor(collaborationsService, notesService, validator) {
+  constructor(collaborationsService, notesService, usersService, validator) {
     this._collaborationsService = collaborationsService;
     this._notesService = notesService;
+    this._usersService = usersService;
     this._validator = validator;
 
     autoBind(this);
@@ -15,6 +16,7 @@ class CollaborationsHandler {
     const { noteId, userId } = request.payload;
 
     await this._notesService.verifyNoteOwner(noteId, credentialId);
+    await this._usersService.getUserById(userId);
     const collaborationId = await this._collaborationsService.addCollaboration(noteId, userId);
     const response = h.response({
       status: 'success',
@@ -33,6 +35,7 @@ class CollaborationsHandler {
     const { noteId, userId } = request.payload;
 
     await this._notesService.verifyNoteOwner(noteId, credentialId);
+    await this._usersService.getUserById(userId);
     await this._collaborationsService.deleteCollaboration(noteId, userId);
 
     return {
